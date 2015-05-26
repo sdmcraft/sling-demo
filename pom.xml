@@ -33,15 +33,29 @@
             <version>3.1.0</version>
         </dependency>
 
+        <!--OSGi dependencies-->
+        <dependency>
+            <groupId>org.apache.felix</groupId>
+            <artifactId>org.osgi.compendium</artifactId>
+            <version>1.4.0</version>
+        </dependency>
+
         <dependency>
             <groupId>org.apache.felix</groupId>
             <artifactId>org.apache.felix.scr.annotations</artifactId>
             <version>1.9.10</version>
         </dependency>
+
+        <!--Sling dependencies-->
         <dependency>
             <groupId>org.apache.sling</groupId>
             <artifactId>org.apache.sling.api</artifactId>
             <version>2.9.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.sling</groupId>
+            <artifactId>org.apache.sling.servlets.post</artifactId>
+            <version>2.3.6</version>
         </dependency>
 
         <dependency>
@@ -49,6 +63,13 @@
             <artifactId>tika-core</artifactId>
             <version>1.2</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.12</version>
+        </dependency>
+
 
     </dependencies>
     <build>
