@@ -9,4 +9,6 @@ public interface ResourceTypePostProcessor {
     public void process(
             SlingHttpServletRequest request,
             List<Modification> list) throws Exception;
+
+    public String getResourceType();
 }

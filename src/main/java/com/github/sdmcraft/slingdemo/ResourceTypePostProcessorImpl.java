@@ -9,6 +9,8 @@ import org.apache.felix.scr.annotations.Service;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.servlets.post.Modification;
 import org.osgi.service.component.ComponentContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
@@ -17,6 +19,7 @@ import java.util.List;
 @Properties({@Property(name = "sling.servlet.resourceTypes",value = "slingdemo")})
 public class ResourceTypePostProcessorImpl implements  ResourceTypePostProcessor {
 
+    private static final Logger log = LoggerFactory.getLogger(ResourceTypePostProcessorImpl.class);
     private String resourceType;
 
     @Activate
@@ -26,7 +29,7 @@ public class ResourceTypePostProcessorImpl implements  ResourceTypePostProcessor
 
     @Override public void process(SlingHttpServletRequest request,
             List<Modification> list) throws Exception {
-
+        log.info(">>>>>>>>>Inside ResourceTypePostProcessorImpl");
     }
 
     public String getResourceType() {
