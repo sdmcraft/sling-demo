@@ -1,0 +1,5 @@
+[feature name=slingdemo]
+
+[artifacts]
+    org.apache.sling/org.apache.sling.launchpad/8-SNAPSHOT/slingstart
+    com.github.sdmcraft/sling-demo/0.0.1-SNAPSHOT
