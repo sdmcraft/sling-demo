@@ -25,6 +25,24 @@
     <version>0.0.1-SNAPSHOT</version>
     <name>sling-demo</name>
     <description>com.github.sdmcraft - sling-demo</description>
+
+    <properties>
+        <!-- HTTP port of Sling instance to test -->
+        <http.port>8080</http.port>
+
+        <!-- path suffix for HTTP access to Sling test instance -->
+        <http.base.path />
+
+        <!-- path suffix for WebDAV access to Sling test instance -->
+        <webdav.workspace.path />
+
+        <!-- hostname of Sling instance to test -->
+        <test.host>localhost</test.host>
+
+        <!-- Timeout when checking for Sling readyness before starting tests -->
+        <HttpTestBase.readyTimeoutSeconds>62</HttpTestBase.readyTimeoutSeconds>
+    </properties>
+
     <dependencies>
 
         <dependency>
@@ -72,6 +90,7 @@
             <version>2.3.6</version>
         </dependency>
 
+        <!--Other dependencies-->
         <dependency>
             <groupId>org.apache.tika</groupId>
             <artifactId>tika-core</artifactId>
@@ -82,6 +101,28 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
             <version>1.7.12</version>
+        </dependency>
+
+        <!--Testing dependencies-->
+        <dependency>
+            <groupId>org.apache.sling</groupId>
+            <artifactId>org.apache.sling.commons.testing</artifactId>
+            <version>2.0.19-SNAPSHOT</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-simple</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>junit</groupId>
+                    <artifactId>junit-dep</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20141113</version>
         </dependency>
 
 
@@ -119,6 +160,37 @@
                     </instructions>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.16</version>
+                <configuration>
+                    <systemProperties>
+                        <!--
+                            Settings for running the integration against a specific Sling instance
+                        -->
+                        <property>
+                            <name>launchpad.http.server.url</name>
+                            <value>
+                                http://${test.host}:${http.port}/${http.base.path}
+                            </value>
+                        </property>
+                        <property>
+                            <name>launchpad.webdav.server.url</name>
+                            <value>
+                                http://${test.host}:${http.port}/${webdav.workspace.path}
+                            </value>
+                        </property>
+                        <property>
+                            <name>HttpTestBase.readyTimeoutSeconds</name>
+                            <value>
+                                ${HttpTestBase.readyTimeoutSeconds}
+                            </value>
+                        </property>
+                    </systemProperties>
+                </configuration>
+            </plugin>
+
         </plugins>
     </build>
     <profiles>
