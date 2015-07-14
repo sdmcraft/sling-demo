@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Dictionary;
 
-@Component(configurationFactory = true, metatype = true)
+@Component(configurationFactory = true, metatype = true, immediate = true)
 @Service
 public class DemoConfigFactory implements DemoService {
 
