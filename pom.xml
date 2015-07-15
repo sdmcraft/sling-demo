@@ -41,7 +41,7 @@
      -->
     <properties>
         <!-- HTTP port of Sling instance to test -->
-        <http.port>8080</http.port>
+        <!--<http.port>8080</http.port>-->
 
         <!-- path suffix for HTTP access to Sling test instance -->
         <http.base.path />
@@ -60,7 +60,7 @@
         <!-- Set this to run tests against an existing server instance -->
         <keepJarRunning>false</keepJarRunning>
 
-        <test.server.url>http://${test.host}:${http.port}/${http.base.path}</test.server.url>
+        <!--<test.server.url>http://${test.host}:${http.port}/${http.base.path}</test.server.url>-->
         <!-- Set this to run tests against a specific hostname, if test.server.url is not set-->
         <test.server.hostname />
 
@@ -138,6 +138,7 @@
             <version>2.3.6</version>
         </dependency>
 
+
         <!--Other dependencies-->
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -165,7 +166,7 @@
             <groupId>org.apache.sling</groupId>
             <artifactId>org.apache.sling.testing.tools</artifactId>
             <version>1.0.11-SNAPSHOT</version>
-            <scope>provided</scope>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.json</groupId>
@@ -221,7 +222,7 @@
                         <!--
                             Settings for running the integration against a specific Sling instance
                         -->
-                        <property>
+                        <!--<property>
                             <name>launchpad.http.server.url</name>
                             <value>
                                 http://${test.host}:${http.port}/${http.base.path}
@@ -238,7 +239,7 @@
                             <value>
                                 ${HttpTestBase.readyTimeoutSeconds}
                             </value>
-                        </property>
+                        </property>-->
                     </systemProperties>
                 </configuration>
             </plugin>
@@ -269,37 +270,47 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
+                <version>2.10</version>
                 <executions>
                     <execution>
                         <id>copy-runnable-jar</id>
                         <goals>
-                            <goal>copy-dependencies</goal>
+                            <goal>copy</goal>
                         </goals>
-                        <phase>process-resources</phase>
+                        <phase>package</phase>
                         <configuration>
-                            <includeArtifactIds>org.apache.sling.launchpad</includeArtifactIds>
-                            <excludeTransitive>true</excludeTransitive>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.apache.sling</groupId>
+                                    <artifactId>org.apache.sling.launchpad</artifactId>
+                                    <version>8-SNAPSHOT</version>
+                                    <type>jar</type>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>${project.build.directory}/testing</outputDirectory>
+                                </artifactItem>
+                            </artifactItems>
+                            <outputDirectory>${project.build.directory}/sling</outputDirectory>
                             <overWriteReleases>false</overWriteReleases>
                             <overWriteSnapshots>false</overWriteSnapshots>
                         </configuration>
                     </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
                     <execution>
-                        <!--
-                            Consider all dependencies as candidates to be installed
-                            as additional bundles. We use system properties to define
-                            which bundles to install in which order.
-                        -->
-                        <id>copy-additional-bundles</id>
-                        <goals>
-                            <goal>copy-dependencies</goal>
-                        </goals>
-                        <phase>process-resources</phase>
+                        <phase>package</phase>
                         <configuration>
-                            <outputDirectory>${project.build.directory}/sling/additional-bundles</outputDirectory>
-                            <excludeTransitive>true</excludeTransitive>
-                            <overWriteReleases>false</overWriteReleases>
-                            <overWriteSnapshots>false</overWriteSnapshots>
+                            <tasks>
+                                <copy file="${project.build.directory}/${project.build.finalName}.jar"
+                                      toDir="${project.build.directory}/testing/additional-bundles"
+                                      verbose="true" />
+                            </tasks>
                         </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
                     </execution>
                 </executions>
             </plugin>
@@ -317,8 +328,6 @@
                         <configuration>
                             <portNames>
                                 <portName>http.port</portName>
-                                <portName>instance1.http.port</portName>
-                                <portName>instance2.http.port</portName>
                             </portNames>
                         </configuration>
                     </execution>
@@ -342,29 +351,28 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <debugForkedProcess>${maven.surefire.debug}</debugForkedProcess>
+                    <!--<debugForkedProcess>${maven.surefire.debug}</debugForkedProcess>-->
                     <includes>
                         <include>${tests.to.run}</include>
                     </includes>
-                    <excludes>
+                    <!--<excludes>
                         <exclude>${tests.to.ignore}</exclude>
-                    </excludes>
+                    </excludes>-->
                     <systemPropertyVariables>
-                        <test.server.url>${test.server.url}</test.server.url>
-                        <test.server.hostname>${test.server.hostname}</test.server.hostname>
-                        <test.server.username>${test.server.username}</test.server.username>
-                        <test.server.password>${test.server.password}</test.server.password>
+                        <!--<test.server.url>${test.server.url}</test.server.url>-->
+                        <!--<test.server.hostname>${test.server.hostname}</test.server.hostname>-->
+                        <!--<test.server.username>${test.server.username}</test.server.username>-->
+                        <!--<test.server.password>${test.server.password}</test.server.password>-->
                         <jar.executor.server.port>${http.port}</jar.executor.server.port>
-                        <instance1.jar.executor.server.port>${instance1.http.port}</instance1.jar.executor.server.port>
-                        <instance2.jar.executor.server.port>${instance2.http.port}</instance2.jar.executor.server.port>
                         <jar.executor.vm.options>${jar.executor.vm.options}</jar.executor.vm.options>
-                        <jar.executor.jar.folder>${project.basedir}/target/dependency</jar.executor.jar.folder>
+                        <jar.executor.work.folder>${project.build.directory}/testing</jar.executor.work.folder>
+                        <jar.executor.jar.folder>${project.build.directory}/testing</jar.executor.jar.folder>
                         <jar.executor.jar.name.regexp>org.apache.sling.launchpad.*jar$</jar.executor.jar.name.regexp>
                         <jar.executor.work.folder>${jar.executor.work.folder}</jar.executor.work.folder>
                         <jar.executor.jar.options>${jar.executor.jar.options} -Dsling.home=sling/default</jar.executor.jar.options>
                         <instance1.jar.executor.jar.options>${jar.executor.jar.options} -Dsling.home=sling/instance1</instance1.jar.executor.jar.options>
                         <instance2.jar.executor.jar.options>${jar.executor.jar.options} -Dsling.home=sling/instance2</instance2.jar.executor.jar.options>
-                        <additional.bundles.path>${project.basedir}/target/sling/additional-bundles</additional.bundles.path>
+                        <additional.bundles.path>${project.basedir}/target/testing/additional-bundles</additional.bundles.path>
                         <keepJarRunning>${keepJarRunning}</keepJarRunning>
                         <server.ready.timeout.seconds>60</server.ready.timeout.seconds>
                         <sling.testing.timeout.multiplier>${sling.testing.timeout.multiplier}</sling.testing.timeout.multiplier>
@@ -379,15 +387,7 @@
                             The bundles are installed in lexical order of these property names.
                             All bundles must be listed as dependencies in this pom, or they won't be installed.
                         -->
-                        <sling.additional.bundle.1>org.apache.sling.junit.core</sling.additional.bundle.1>
-                        <sling.additional.bundle.2>org.apache.sling.junit.scriptable</sling.additional.bundle.2>
-                        <sling.additional.bundle.3>org.apache.sling.testing.samples.sampletests</sling.additional.bundle.3>
-                        <sling.additional.bundle.4>org.apache.sling.testing.samples.failingtests</sling.additional.bundle.4>
-                        <sling.additional.bundle.5>org.apache.sling.junit.remote</sling.additional.bundle.5>
-                        <sling.additional.bundle.6>org.apache.sling.testing.tools</sling.additional.bundle.6>
-                        <sling.additional.bundle.7>httpclient-osgi</sling.additional.bundle.7>
-                        <sling.additional.bundle.8>httpcore-osgi</sling.additional.bundle.8>
-                        <sling.additional.bundle.9>org.apache.sling.junit.performance</sling.additional.bundle.9>
+                        <sling.additional.bundle.1>sling-demo</sling.additional.bundle.1>
                     </systemPropertyVariables>
                 </configuration>
             </plugin>
