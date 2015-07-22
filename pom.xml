@@ -296,6 +296,14 @@
                                     <overWrite>true</overWrite>
                                     <outputDirectory>${project.build.directory}/testing/additional-bundles</outputDirectory>
                                 </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.apache.sling</groupId>
+                                    <artifactId>org.apache.sling.jcr.webdav</artifactId>
+                                    <version>2.2.3-SNAPSHOT</version>
+                                    <type>jar</type>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>${project.build.directory}/testing/additional-bundles</outputDirectory>
+                                </artifactItem>
 
                             </artifactItems>
                             <outputDirectory>${project.build.directory}/sling</outputDirectory>
@@ -395,7 +403,8 @@
                             All bundles must be listed as dependencies in this pom, or they won't be installed.
                         -->
                         <sling.additional.bundle.1>jackrabbit-jcr-server</sling.additional.bundle.1>
-                        <sling.additional.bundle.2>sling-demo</sling.additional.bundle.2>
+                        <sling.additional.bundle.2>org.apache.sling.jcr.webdav</sling.additional.bundle.2>
+                        <sling.additional.bundle.3>sling-demo</sling.additional.bundle.3>
                     </systemPropertyVariables>
                 </configuration>
             </plugin>

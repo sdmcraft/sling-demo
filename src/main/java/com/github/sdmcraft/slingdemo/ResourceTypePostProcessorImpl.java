@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
-@Component(metatype = true)
+@Component(metatype = true, immediate = true)
 @Service
 @Properties({@Property(name = "sling.servlet.resourceTypes",value = "slingdemo")})
 public class ResourceTypePostProcessorImpl implements  ResourceTypePostProcessor {
