@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
   Licensed to the Apache Software Foundation (ASF) under one
   or more contributor license agreements.  See the NOTICE file
@@ -17,7 +17,8 @@
   specific language governing permissions and limitations
   under the License.
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.github.sdmcraft</groupId>
     <artifactId>sling-demo</artifactId>
@@ -44,10 +45,10 @@
         <!--<http.port>8080</http.port>-->
 
         <!-- path suffix for HTTP access to Sling test instance -->
-        <http.base.path />
+        <http.base.path/>
 
         <!-- path suffix for WebDAV access to Sling test instance -->
-        <webdav.workspace.path />
+        <webdav.workspace.path/>
 
         <!-- hostname of Sling instance to test -->
         <test.host>localhost</test.host>
@@ -62,13 +63,13 @@
 
         <!--<test.server.url>http://${test.host}:${http.port}/${http.base.path}</test.server.url>-->
         <!-- Set this to run tests against a specific hostname, if test.server.url is not set-->
-        <test.server.hostname />
+        <test.server.hostname/>
 
         <!-- Set this to use a different username for remote execution of sling junit tests -->
-        <test.server.username />
+        <test.server.username/>
 
         <!-- Set this to use a different password for remote execution of sling junit tests -->
-        <test.server.password />
+        <test.server.password/>
 
         <!-- Options for the VM that executes our runnable jar -->
         <jar.executor.vm.options>-Xmx512m</jar.executor.vm.options>
@@ -77,7 +78,7 @@
         <sling.testing.timeout.multiplier>1.0</sling.testing.timeout.multiplier>
 
         <!-- Set this to run the executable jar in a specified filesystem folder -->
-        <jar.executor.work.folder />
+        <jar.executor.work.folder/>
 
         <!-- Options for the jar to execute. $JAREXEC_SERVER_PORT$ is replaced by the
             selected port number -->
@@ -199,6 +200,8 @@
                 <version>2.5.4</version>
                 <configuration>
                     <instructions>
+                        <Export-Package>com.github.sdmcraft.slingdemo.api</Export-Package>
+                        <Private-Package>com.github.sdmcraft.slingdemo.*</Private-Package>
                         <Sling-Nodetypes>
                             SLING-INF/nodetypes/nodetypes.cnd
                         </Sling-Nodetypes>
@@ -245,6 +248,7 @@
             </plugin>
             <plugin>
                 <artifactId>maven-clean-plugin</artifactId>
+                <version>2.5</version>
                 <configuration>
                     <filesets>
                         <fileset>
@@ -260,6 +264,7 @@
             <plugin>
                 <groupId>org.apache.rat</groupId>
                 <artifactId>apache-rat-plugin</artifactId>
+                <version>0.10</version>
                 <configuration>
                     <excludes>
                         <exclude>derby.log</exclude>
@@ -294,7 +299,8 @@
                                     <version>2.10.2-SNAPSHOT</version>
                                     <type>jar</type>
                                     <overWrite>true</overWrite>
-                                    <outputDirectory>${project.build.directory}/testing/additional-bundles</outputDirectory>
+                                    <outputDirectory>${project.build.directory}/testing/additional-bundles
+                                    </outputDirectory>
                                 </artifactItem>
                                 <artifactItem>
                                     <groupId>org.apache.sling</groupId>
@@ -302,7 +308,8 @@
                                     <version>2.2.3-SNAPSHOT</version>
                                     <type>jar</type>
                                     <overWrite>true</overWrite>
-                                    <outputDirectory>${project.build.directory}/testing/additional-bundles</outputDirectory>
+                                    <outputDirectory>${project.build.directory}/testing/additional-bundles
+                                    </outputDirectory>
                                 </artifactItem>
 
                             </artifactItems>
@@ -317,12 +324,11 @@
                 <artifactId>maven-antrun-plugin</artifactId>
                 <executions>
                     <execution>
-                        <phase>pre-integration-test</phase>
+                        <phase>package</phase>
                         <configuration>
                             <tasks>
                                 <copy file="${project.build.directory}/${project.build.finalName}.jar"
-                                      toDir="${project.build.directory}/testing/additional-bundles"
-                                      verbose="true" />
+                                      toDir="${project.build.directory}/testing/additional-bundles" verbose="true" failonerror="false"/>
                             </tasks>
                         </configuration>
                         <goals>
@@ -335,6 +341,7 @@
                 <!-- Find free ports to run our server -->
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>build-helper-maven-plugin</artifactId>
+                <version>1.9.1</version>
                 <executions>
                     <execution>
                         <id>reserve-server-port</id>
@@ -386,14 +393,20 @@
                         <jar.executor.jar.folder>${project.build.directory}/testing</jar.executor.jar.folder>
                         <jar.executor.jar.name.regexp>org.apache.sling.launchpad.*jar$</jar.executor.jar.name.regexp>
                         <jar.executor.work.folder>${jar.executor.work.folder}</jar.executor.work.folder>
-                        <jar.executor.jar.options>${jar.executor.jar.options} -Dsling.home=${project.build.directory}/testing/sling</jar.executor.jar.options>
-                        <additional.bundles.path>${project.basedir}/target/testing/additional-bundles</additional.bundles.path>
+                        <jar.executor.jar.options>${jar.executor.jar.options}
+                            -Dsling.home=${project.build.directory}/testing/sling
+                        </jar.executor.jar.options>
+                        <additional.bundles.path>${project.basedir}/target/testing/additional-bundles
+                        </additional.bundles.path>
                         <keepJarRunning>${keepJarRunning}</keepJarRunning>
                         <server.ready.timeout.seconds>60</server.ready.timeout.seconds>
-                        <sling.testing.timeout.multiplier>${sling.testing.timeout.multiplier}</sling.testing.timeout.multiplier>
+                        <sling.testing.timeout.multiplier>${sling.testing.timeout.multiplier}
+                        </sling.testing.timeout.multiplier>
                         <server.ready.path.1>/:script src="system/sling.js"</server.ready.path.1>
-                        <server.ready.path.2>/.explorer.html:href="/libs/sling/explorer/css/explorer.css"</server.ready.path.2>
-                        <server.ready.path.3>/sling-test/sling/sling-test.html:Sling client library tests</server.ready.path.3>
+                        <server.ready.path.2>/.explorer.html:href="/libs/sling/explorer/css/explorer.css"
+                        </server.ready.path.2>
+                        <server.ready.path.3>/sling-test/sling/sling-test.html:Sling client library tests
+                        </server.ready.path.3>
                         <start.bundles.timeout.seconds>30</start.bundles.timeout.seconds>
                         <bundle.install.timeout.seconds>20</bundle.install.timeout.seconds>
 
